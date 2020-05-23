@@ -1,4 +1,5 @@
 use rltk::{GameState, Rltk};
+use specs_derive::Component;
 
 struct State {}
 impl GameState for State {
@@ -6,6 +7,13 @@ impl GameState for State {
         ctx.cls();
         ctx.print(1, 1, "Hello Rust World");
     }
+}
+
+// Entity world position
+#[derive(Component, Debug)]
+struct Position {
+    x: i32,
+    y: i32,
 }
 
 fn main() -> rltk::BError {
