@@ -22,7 +22,7 @@ struct Position {
 
 #[derive(Component, Debug)]
 struct Renderable {
-    glyth: rltk::FontCharType,
+    glyph: rltk::FontCharType,
     fg: RGB,
     bg: RGB,
 }
@@ -36,5 +36,7 @@ fn main() -> rltk::BError {
     let mut gs = State {
         ecs: World::new()
     };
+    gs.ecs.register::<Position>();
+    gs.ecs.register::<Renderable>();
     rltk::main_loop(context, gs)
 }
