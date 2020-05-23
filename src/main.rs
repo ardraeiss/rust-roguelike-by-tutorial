@@ -1,7 +1,11 @@
 use rltk::{GameState, Rltk, RGB, VirtualKeyCode};
+use specs::prelude::*;
 use specs_derive::Component;
 
-struct State {}
+// Game state
+struct State {
+    ecs: World,
+}
 impl GameState for State {
     fn tick(&mut self, ctx: &mut Rltk) {
         ctx.cls();
@@ -23,11 +27,14 @@ struct Renderable {
     bg: RGB,
 }
 
+// Application entry point
 fn main() -> rltk::BError {
     use rltk::RltkBuilder;
     let context = RltkBuilder::simple80x50()
         .with_title("Roguelike Tutorial")
         .build()?;
-    let gs = State {};
+    let mut gs = State {
+        ecs: World::new()
+    };
     rltk::main_loop(context, gs)
 }
