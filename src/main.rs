@@ -1,4 +1,4 @@
-use rltk::{GameState, Rltk};
+use rltk::{GameState, Rltk, RGB, VirtualKeyCode};
 use specs_derive::Component;
 
 struct State {}
@@ -14,6 +14,13 @@ impl GameState for State {
 struct Position {
     x: i32,
     y: i32,
+}
+
+#[derive(Component, Debug)]
+struct Renderable {
+    glyth: rltk::FontCharType,
+    fg: RGB,
+    bg: RGB,
 }
 
 fn main() -> rltk::BError {
