@@ -10,7 +10,10 @@ pub fn xy_idx(x: i32, y: i32) -> usize {
     (y as usize * 80) + x as usize
 }
 
-pub fn new_map() -> Vec<TileType> {
+/// Makes a map with solid boundaries and 400 randomly placed walls. No guarantees that it won't
+/// look awful.
+#[allow(dead_code)]
+pub fn new_map_test() -> Vec<TileType> {
     let mut map = vec![TileType::Floor; 80*50];
 
     create_boundaries_walls(&mut map);
@@ -31,6 +34,18 @@ pub fn new_map() -> Vec<TileType> {
     map
 }
 
+pub fn new_map_rooms_and_corridors() -> Vec<TileType> {
+    let mut map = vec![TileType::Wall; 80*50];
+
+    let room1 = Rect::new(20, 15, 10, 15);
+    let room2 = Rect::new(35, 15, 10, 15);
+
+    apply_room_to_map(&room1, &mut map);
+    apply_room_to_map(&room2, &mut map);
+
+    map
+}
+
 /// Make the boundaries walls
 fn create_boundaries_walls(map: &mut [TileType]) {
     for x in 0..80 {
@@ -40,6 +55,14 @@ fn create_boundaries_walls(map: &mut [TileType]) {
     for y in 0..50 {
         map[xy_idx(0, y)] = TileType::Wall;
         map[xy_idx(79, y)] = TileType::Wall;
+    }
+}
+
+fn apply_room_to_map(room : &Rect, map: &mut [TileType]) {
+    for y in room.y1 +1 ..= room.y2 {
+        for x in room.x1 + 1 ..= room.x2 {
+            map[xy_idx(x, y)] = TileType::Floor;
+        }
     }
 }
 

@@ -67,7 +67,7 @@ fn main() -> rltk::BError {
         .with(Player{})
         .build();
 
-    gs.ecs.insert(map::new_map());
+    gs.ecs.insert(map::new_map_rooms_and_corridors());
 
     // Run the main game loop
     rltk::main_loop(context, gs)
