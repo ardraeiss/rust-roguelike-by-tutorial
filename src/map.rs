@@ -44,8 +44,16 @@ fn create_boundaries_walls(map: &mut [TileType]) {
 }
 
 pub fn draw_map(map: &[TileType], ctx : &mut Rltk) {
-    let color_floor: RGB = RGB::from_f32(0.4, 0.4, 0.4);
-    let color_wall: RGB = RGB::from_f32(0.6, 0.7, 0.6);
+    let color_floor = (
+        RGB::from_f32(0.3, 0.3, 0.35),
+        RGB::from_f32(0., 0., 0.),
+        rltk::to_cp437('.')
+    );
+    let color_wall = (
+        RGB::from_f32(0.5, 0.6, 0.5),
+        RGB::from_f32(0., 0., 0.),
+        rltk::to_cp437('#')
+    );
 
     let mut y = 0;
     let mut x = 0;
@@ -53,10 +61,10 @@ pub fn draw_map(map: &[TileType], ctx : &mut Rltk) {
         // Render a tile depending upon the tile type
         match tile {
             TileType::Floor => {
-                ctx.set(x, y, color_floor, RGB::from_f32(0., 0., 0.), rltk::to_cp437('.'));
+                ctx.set(x, y, color_floor.0, color_floor.1, color_floor.2);
             }
             TileType::Wall => {
-                ctx.set(x, y, color_wall, RGB::from_f32(0., 0., 0.), rltk::to_cp437('#'));
+                ctx.set(x, y, color_wall.0, color_wall.1, color_wall.2);
             }
         }
 
