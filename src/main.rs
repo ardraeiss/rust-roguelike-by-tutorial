@@ -2,6 +2,8 @@ use rltk::{GameState, Rltk, RGB, VirtualKeyCode};
 use specs::prelude::*;
 use specs_derive::Component;
 
+mod map;
+
 // Game state
 struct State {
     ecs: World,
@@ -16,6 +18,9 @@ impl GameState for State {
 
         let positions = self.ecs.read_storage::<Position>();
         let renderables = self.ecs.read_storage::<Renderable>();
+        let map = self.ecs.fetch::<Vec<map::TileType>>();
+
+        map::draw_map(&map, ctx);
 
         for (pos, render) in (&positions, &renderables).join() {
             ctx.set(pos.x, pos.y, render.fg, render.bg, render.glyph);
@@ -30,6 +35,8 @@ impl State {
         self.ecs.maintain();
     }
 }
+
+// Map stuff
 
 // Entity world position
 #[derive(Component, Debug)]
@@ -133,6 +140,8 @@ fn main() -> rltk::BError {
         .with(LeftMover{})
         .build();
     }
+
+    gs.ecs.insert(map::new_map());
 
     // Run the main game loop
     rltk::main_loop(context, gs)
