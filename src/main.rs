@@ -7,6 +7,8 @@ pub mod player;
 use player::*;
 pub mod map;
 use map::*;
+mod rect;
+pub use rect::Rect;
 
 // Game state
 pub struct State {

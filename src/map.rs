@@ -1,4 +1,5 @@
 use rltk::{Rltk, RGB};
+use super::{Rect};
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum TileType {
