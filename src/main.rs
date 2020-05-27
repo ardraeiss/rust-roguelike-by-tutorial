@@ -1,7 +1,8 @@
 use rltk::{GameState, Rltk, RGB, VirtualKeyCode};
 use specs::prelude::*;
-use specs_derive::Component;
 
+pub mod components;
+use components::*;
 mod map;
 
 // Game state
@@ -33,27 +34,6 @@ impl State {
         self.ecs.maintain();
     }
 }
-
-// Map stuff
-
-// Entity world position
-#[derive(Component, Debug)]
-struct Position {
-    x: i32,
-    y: i32,
-}
-
-#[derive(Component, Debug)]
-struct Renderable {
-    glyph: rltk::FontCharType,
-    fg: RGB,
-    bg: RGB,
-}
-
-// It's Player time
-#[derive(Component, Debug)]
-struct Player {}
-
 
 fn player_input(gs: &mut State, ctx: &mut Rltk) {
     // Player movement
