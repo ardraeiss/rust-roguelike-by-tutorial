@@ -1,4 +1,4 @@
-use rltk::{Rltk, RGB, RandomNumberGenerator};
+use rltk::{Rltk, RGB, RandomNumberGenerator, Algorithm2D, Point, BaseMap};
 use super::{Rect};
 use std::cmp::{min, max};
 use specs::prelude::*;
@@ -13,6 +13,18 @@ pub struct Map {
     pub rooms : Vec<Rect>,
     pub width : i32,
     pub height : i32,
+}
+
+impl Algorithm2D for Map {
+    fn dimensions(&self) -> Point {
+        Point::new(self.width, self.height)
+    }
+}
+
+impl BaseMap for Map {
+    fn is_opaque(&self, idx:usize) -> bool {
+        self.tiles[idx as usize] == TileType::Wall
+    }
 }
 
 impl Map {
