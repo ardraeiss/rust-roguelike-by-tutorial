@@ -3,6 +3,8 @@ use specs::prelude::*;
 
 pub mod components;
 use components::*;
+mod visibility_system;
+use visibility_system::VisibilitySystem;
 pub mod player;
 use player::*;
 pub mod map;
@@ -35,6 +37,8 @@ impl GameState for State {
 
 impl State {
     fn run_systems(&mut self) {
+        let mut vis = VisibilitySystem{};
+        vis.run_now(&self.ecs);
         self.ecs.maintain();
     }
 }
