@@ -1,5 +1,5 @@
 use rltk::{Rltk, RGB, RandomNumberGenerator, Algorithm2D, Point, BaseMap};
-use super::{Rect};
+use super::{Rect, Viewshed, Player};
 use std::cmp::{min, max};
 use specs::prelude::*;
 
@@ -123,8 +123,8 @@ impl Map {
 
         map
     }
-
 }
+
 
 pub fn draw_map(ecs: &World, ctx : &mut Rltk) {
     let color_floor = (
@@ -138,27 +138,35 @@ pub fn draw_map(ecs: &World, ctx : &mut Rltk) {
         rltk::to_cp437('#')
     );
 
-    let mut y = 0;
-    let mut x = 0;
-
+    let mut viewsheds = ecs.write_storage::<Viewshed>();
+    let mut players = ecs.write_storage::<Player>();
     let map = ecs.fetch::<Map>();
 
-    for tile in map.tiles.iter() {
-        // Render a tile depending upon the tile type
-        match tile {
-            TileType::Floor => {
-                ctx.set(x, y, color_floor.0, color_floor.1, color_floor.2);
-            }
-            TileType::Wall => {
-                ctx.set(x, y, color_wall.0, color_wall.1, color_wall.2);
-            }
-        }
+    for (_player, viewshed) in (&mut players, &mut viewsheds).join() {
+        let mut y = 0;
+        let mut x = 0;
 
-        // Move the coordinates
-        x += 1;
-        if x > map.width - 1 {
-            x = 0;
-            y += 1;
+        for tile in map.tiles.iter() {
+            // Render a tile depending upon the tile type
+            let pt = Point::new(x, y);
+
+            if viewshed.visible_tiles.contains(&pt) {
+                match tile {
+                    TileType::Floor => {
+                        ctx.set(x, y, color_floor.0, color_floor.1, color_floor.2);
+                    }
+                    TileType::Wall => {
+                        ctx.set(x, y, color_wall.0, color_wall.1, color_wall.2);
+                    }
+                }
+            }
+
+            // Move the coordinates
+            x += 1;
+            if x > map.width - 1 {
+                x = 0;
+                y += 1;
+            }
         }
     }
 }
