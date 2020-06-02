@@ -14,6 +14,7 @@ pub struct Map {
     pub width : i32,
     pub height : i32,
     pub revealed_tiles : Vec<bool>,
+    pub visible_tiles : Vec<bool>,
 }
 
 impl Algorithm2D for Map {
@@ -90,6 +91,7 @@ impl Map {
             width : WIDTH,
             height : HEIGHT,
             revealed_tiles : vec![false;  WIDTH as usize*HEIGHT as usize],
+            visible_tiles : vec![false;  WIDTH as usize*HEIGHT as usize],
         };
 
         let mut rng = RandomNumberGenerator::new();
@@ -130,12 +132,12 @@ impl Map {
 
 pub fn draw_map(ecs: &World, ctx : &mut Rltk) {
     let color_floor = (
-        RGB::from_f32(0.3, 0.3, 0.35),
+        RGB::from_f32(0.0, 0.7, 0.7),
         RGB::from_f32(0., 0., 0.),
         rltk::to_cp437('.')
     );
     let color_wall = (
-        RGB::from_f32(0.5, 0.6, 0.5),
+        RGB::from_f32(0.9, 0.9, 0.0),
         RGB::from_f32(0., 0., 0.),
         rltk::to_cp437('#')
     );
@@ -150,14 +152,23 @@ pub fn draw_map(ecs: &World, ctx : &mut Rltk) {
     for (idx, tile) in map.tiles.iter().enumerate() {
         // Render a tile depending upon the tile type
         if map.revealed_tiles[idx] {
+            let glyph;
+            let mut fg;
+            let mut bg;
             match tile {
                 TileType::Floor => {
-                    ctx.set(x, y, color_floor.0, color_floor.1, color_floor.2);
+                    fg = color_floor.0;
+                    bg = color_floor.1;
+                    glyph = color_floor.2;
                 }
                 TileType::Wall => {
-                    ctx.set(x, y, color_wall.0, color_wall.1, color_wall.2);
+                    fg = color_wall.0;
+                    bg = color_wall.1;
+                    glyph = color_wall.2;
                 }
             }
+            if !map.visible_tiles[idx] { fg = fg.to_greyscale() };
+            ctx.set(x, y, fg, bg, glyph);
         }
 
         // Move the coordinates
